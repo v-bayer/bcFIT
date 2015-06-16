@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  	<property name="build.dir" value="build"/>
+  	<property name="doc.dir" value="doc"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="src.dir" value="src"/>
+    <property name="src-client.dir" value="src/ija/labyrinth/"/>
+    <property name="src-server.dir" value="src/ija/labyrinth/"/>
+  	<property name="dst-client.dir" value="dest-client"/>
+  	<property name="dst-server.dir" value="dest-server"/>
+
+    <target name="clean">
+      <delete dir="${dst-client.dir}"/>
+      <delete dir="${dst-server.dir}"/>
+      <delete dir="${build.dir}"/>
+      <delete dir="${doc.dir}"/>
+    </target>
+
+  	<target name="compile">
+		  <exec executable="/bin/sh">
+    		<arg value="lib/get-libs.sh"/>
+  		</exec>
+
+      <mkdir dir="${build.dir}" />
+      <javac includeantruntime="false" srcdir="${src.dir}" destdir="${build.dir}" />
+
+      <mkdir dir="${dst-server.dir}"/>
+        <jar destfile="${dst-server.dir}/ija2015-server.jar" basedir="${build.dir}">
+          <manifest>
+            <attribute name="Main-Class" value="ija.labyrinth.Splay"/>
+          </manifest>
+        </jar>
+      <copy todir="${dst-client.dir}">
+        <fileset dir="${lib.dir}/Obr"/>
+      </copy>
+    
+      <mkdir dir="${dst-client.dir}"/>
+        <jar destfile="${dst-client.dir}/ija2015-client.jar" basedir="${build.dir}">
+          <manifest>
+            <attribute name="Main-Class" value="ija.labyrinth.play"/>
+          </manifest>
+        </jar>
+      <copy todir="${dst-client.dir}">
+        <fileset dir="${lib.dir}/Obr"/>
+      </copy>
+
+    		<javadoc sourcepath="src" destdir="doc"/>
+  	</target>
+
+  	<target name="run">
+      <parallel>
+        <sequential>
+          <java fork="true" jar="${dst-server.dir}/ija2015-server.jar" >
+          </java>
+        </sequential>
+
+        <sequential>
+          <java fork="true" jar="${dst-client.dir}/ija2015-client.jar" >
+          </java>
+        </sequential>
+
+        <sequential>
+          <java fork="true" jar="${dst-client.dir}/ija2015-client.jar">
+          </java>
+        </sequential>
+      </parallel>
+    </target>
+
+  <target name="server">
+    <java fork="true" jar="${dst-server.dir}/ija2015-server.jar" />
+  </target>
+
+  <target name="client">
+    <java fork="true" jar="${dst-client.dir}/ija2015-client.jar" />
+  </target>
+
+</project>

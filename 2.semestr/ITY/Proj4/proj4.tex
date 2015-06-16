@@ -1,0 +1,64 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[left=1.5cm,text={18cm, 25cm},top=2.5cm]{geometry}
+\usepackage[cp1250]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+\DeclareUrlCommand\url{\def\UrlLeft{<}\def\UrlRight{>} \urlstyle{tt}}
+\usepackage{color}
+\definecolor{codebgnd}{RGB}{250,250,250}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{subfig}
+\usepackage[czech]{babel}
+\usepackage{dtklogos}
+
+\pagenumbering{arabic}
+\newcommand{\myuv}[1]{\quotedblbase #1\textquotedblleft}
+\usepackage[unicode,colorlinks,hyperindex,plainpages=false,pdftex,urlcolor=blue,linkcolor=black]{hyperref}
+
+\begin{document}
+\begin{titlepage}
+\begin{center}
+\textsc{\Huge{Vysoké uèení technické v~Brnì}\\
+\vspace{\stretch{0.008}}
+\huge{Fakulta informaèních technologií}}\\
+\vspace{\stretch{0.381}}
+\LARGE{Typografie a~publikování\,--\,4. projekt}\\
+\Huge{Citace a~použití Bib\TeX u}
+\vspace{\stretch{0.616}}
+\end{center}
+{\Large 24. dubna 2014 \hfill Bayer Václav}
+\end{titlepage}
+
+
+\section{Historie}
+V~tomto krátkém odstavci spolu prozkoumáme a~objevíme \cite{Rabinowitzc2006} nìkterá tajemství o~typografii a~\TeX u \cite{Vesely1991-}.
+Typografie se dlouho vyvíjela a~má za sebou dlouhou cestu, dokonce i~pøelom tisíceletí \cite{Rajlich1998}.
+Jakmile jsme se dostali od slov až k~poèítaèùm \cite{Dusong1997}, typografie zaznamenala obrovský rozmach.
+
+
+\section{Rozmach typografie}
+Lidé zaèli komunikovat po celém svìtì, typografií se zaèlo zabývat více lidí. Od minulého století a~zároveò tisíciletí
+se zaèal vydavát zpravodaj pro uživatele \TeX u \cite{Zpravodaj1991}. Mohli jste se dovìdìt mnoho informací tøeba o~gramatice \cite{Polakovic:Gramatika},
+pravidlech sazby \cite{Solpera:Pravidla_sazby} atd.
+
+
+\section{Rozmach softwaru}
+\LATEX je program, který je s~typografií úzce spojen a~komu tento název nic neøíká, tak asi neèetl ani žádnou pøíruèku pro
+úplné zaèáteèníky \cite{Rybicka2003}. Veškeré textové editory a~programy pro práci s~textem by byly ale k~nièemu, pokud
+by nevznikly fonty \cite{Jiricek:Zivy_font}, se kterými pracují. Vznikly i~kombinace typografie
+a~fotografie \cite{Slavicek:Typografie_a_fotografie}. Také bylo vydáno mnoho citaèního softwaru \cite{Citace:PRO}, ten usnadòuje práci
+pøi vyhledávání citací. To hlavnì ocení ti studenti, kteøí dìlali tento projekt anebo ti, kteøí pracují na bakaláøských a~diplomových pracích.
+
+\newpage
+% ----------------------------------------------
+
+\bibliographystyle{czechiso}
+
+\begin{flushleft}
+\renewcommand{\refname}{Literatura}
+\bibliography{bibliografie}
+\end{flushleft}
+
+\end{document}
