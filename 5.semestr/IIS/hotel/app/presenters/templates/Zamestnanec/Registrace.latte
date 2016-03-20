@@ -1,0 +1,9 @@
+{block content}
+    {control registraceForm}
+    {if $who == 'zamestnanec'}
+    	<a n:href="Zamestnanci"><input type="button" value="Zpět"></a>
+    {else}
+    	<a n:href="Zakaznici"><input type="button" value="Zpět"></a>
+    {/if}
+{/block}
+

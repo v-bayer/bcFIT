@@ -1,0 +1,16 @@
+{block content}
+{if $role == 'manazer'}
+	{if $koho == 'Zamestnanec'}
+		{control registraceZamestnanecForm}
+		{if $typ_registrace == 'uprav'}<a n:href="Zamestnanci"><input type="button" value="Zpět"></a>{/if}
+	{else}
+		{control registraceZakaznikForm}
+    	{if $typ_registrace == 'uprav'}<a n:href="Zakaznici"><input type="button" value="Zpět"></a>{/if}
+   	{/if}
+{else}
+    {control registraceZakaznikForm}
+    {if $typ_registrace == 'uprav'}<a n:href="Zakaznici"><input type="button" value="Zpět"></a>{/if}
+{/if}
+{/block}
+
+
