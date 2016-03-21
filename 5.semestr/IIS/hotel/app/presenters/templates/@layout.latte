@@ -1,0 +1,76 @@
+{**
+ * @param string   $basePath web base path
+ * @param array    $flashes  flash messages
+ *}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>{ifset title}{include title|striptags} | {/ifset}Nette Sandbox</title>
+
+	{* <link rel="stylesheet" href="{$basePath}/css/style.css"> *}
+	{*<link rel="stylesheet" href="{$basePath}/css/bootstrap.css">*}
+
+
+	    <!-- Bootstrap Core CSS -->
+    <link href="{$basePath}/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{$basePath}/css/simple-sidebar.css" rel="stylesheet">
+
+	<link rel="shortcut icon" href="{$basePath}/favicon.ico">
+	<meta name="viewport" content="width=device-width">
+  
+  <!-- jQuery -->
+  <script src="{$basePath}/js/jquery.js"></script>
+  
+  <!-- Bootstrap Core JavaScript -->
+  <script src="{$basePath}/js/bootstrap.min.js"></script>
+	{block head}{/block}
+</head>
+
+<body>
+	
+	<body>
+
+	    <div id="wrapper">
+	        <!-- Sidebar -->
+	        <div id="sidebar-wrapper">    
+	        	{if $user->loggedIn}
+	            <ul n:inner-foreach="$menuItems as $item => $link" class="sidebar-nav">
+	                <li><a n:href="$link">{$item}</a></li>
+	            </ul>
+			    {else}
+			    <ul class="sidebar-nav">
+			        <li><a n:href="Sign:in">Přihlásit</a></li>
+			    </ul>
+			    {/if}
+	        </div>
+	        <!-- /#sidebar-wrapper -->
+
+	        <!-- Page Content -->
+			{include content}
+			<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+
+			<script src="//nette.github.com/resources/js/netteForms.js"></script>
+	    </div>
+	    <!-- /#wrapper -->
+
+
+	    <!-- Menu Toggle Script -->
+	    <script>
+	    $("#menu-toggle").click(function(e) {
+	        e.preventDefault();
+	        $("#wrapper").toggleClass("toggled");
+	    });
+	    </script>
+
+
+	{block scripts}
+
+	{/block}
+
+</body>
+</html>

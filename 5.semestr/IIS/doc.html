@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Projekt IIS</title>
+    <style type="text/css">
+    	table { border-collapse: collapse; }
+    	td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    	dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+</head>
+<body>
+
+
+
+<h1>Hotel</h1> 
+
+<dl>
+	<dt>Autoři</dt>
+	<dd>Václav Bayer
+	    <a href="mailto:xbayer05@stud.fit.vutbr.cz">xbayer05@stud.fit.vutbr.cz</a> -
+		Operace nad databází
+	</dd>
+	<dd>Jakub Kelečéni <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xkelec00@stud.fit.vutbr.cz">xkelec00@stud.fit.vutbr.cz</a> - 
+		Layout, grafika, správa uživatelů
+	</dd>
+	<dt>URL aplikácie</dt>
+	<dd><a href="http://iis-hotel.8u.cz/hotel/www/">http://iis-hotel.8u.cz/hotel/www/</a></dd>
+	
+</dl>
+
+<h2>Uživatelé systému pro testování</h2>
+
+<table>
+<tr><th>test1</th><th>test</th><th>klient</th></tr>
+<tr><th>test2</th><th>test</th><th>klient</th></tr>
+<tr><th>test3</th><th>test</th><th>klient</th></tr>
+<tr><th>test4</th><th>test</th><th>klient</th></tr>
+<tr><th>test5</th><th>test</th><th>recepce</th></tr>
+<tr><th>test6</th><th>test</th><th>recepce</th></tr>
+<tr><th>test7</th><th>test</th><th>manazer</th></tr>
+</table>
+
+<h2>Implementace</h2>
+<p>Pro implementaci informačního systému pro hotel byl použit php framework Nette. Jako základní model Nette by se dal považovat třívrstvý model: modely, presentery a šablony. Modely slouží k přímým operacím nad databází a spracovaní dat. Presentery dále tyto data spracovávají a poskytují je jednotlivým formulářům, komponentám a šablonám. Šablony reprezentují konečný vzhled který je uživateli k dispozici při navštívení stránek. Jednou z nemála výhod použití Nette je, že je obrovským pomocníkem při použití formulářů, kde se za vás stará o kontrolu vstupních hodnot, jejich formát, validaci atd.</p>
+
+<p>Při implementaci aplikace bylo třeba zasáhnout do struktury databáze z předmětu IDS, a to ve formě přidání tabulky pro záznamy uživatelů a jejich role, ze které je pak odkazováno do původních tabulek, které dělí uživatele na Zakaznik a Zaměstnanec. Dále bylo třeba při přechodu z formátu Oracle na MySQL uvést k tabulkám informaci, že se jedná o tabulky typu InnoDB. </p>
+
+<p>Prvním krokem při spuštění aplikace je výzva k přihlášení, kterou zajištuje SignPresenter.php, operace s přihlašovacími údaji provádí model Authenticator.php. Zabezpečení hesla obstarává hashovací funkce. Jak již vyplývá z výše uvedené tabulky, lze se přihlásit pod následujícími rolemi: klient, recepcni, manazer. Ihned po přihlášení je v BasePresenteru nastaven čas kdy se provede odhlášení uživatele při případné neaktivitě (20 minut). Po rozeznání role uživatele je vykresleno ovládací menu, které se liší s ohledem na přihlášenou roli, to umožní směrovat uživatele tam kam má pod danou rolí přístup. Běh z BasePresenteru je předán HomepagePresenteru, který uživatele vítá s výpisem jeho osobních informací.</p>
+
+<p>Uživatelská role KLIENT:<br>
+Klient, neboli zákazník, má v porovnání s ostatními nejméně možností. Přebíra si ho na starost ZakaznikPresenter.php. Klient může rušit vlastní rezervace, které se ještě nestaly aktualnímy. Hlavní funkcí je možnost vytvořit novou rezervaci. Při vytváření nové rezervace je vyzván k zadání zahájení a ukončení pobytu, v čemž mu napomáhá komponenta DataPicker tak aby se nemusel starat o formátování data, stačit jen vybrat z kalendáře. Po zadání datumu, je zjištěno, zda se v htoelu vyskytují volné pokoje k danému datu. V případě negativní odpovědi je klient vyzván k opětovnému zadání data plánovaného pobytu. Jsou-li pokoje volné, je zákazník vyzván k výběru poskytovaných služeb zaměstnanci hotelu a také k výběru volného pokoje, který se taktéž může cenově lišit. Po potvrzení je rezervace uložena. Poslední funkcí je přehled klientových plateb, který slouží jen pro informaci, jednotlivé záznamy se dají odstranit z historie.</p>
+
+<p>Uživatelská role RECEPCE:<br>
+Recepce se zde chápe jako zaměstnanec hotelu, to je tatáž funkce. Dále se bude využívat jen pojem "zaměstnanec". Zaměstnanec má již více funkcí než klient, a taktéž sdílí za účelem odstranění duplicitního kódu svůj presenter ZamestnanecPresenter.php s rolí manažer. Obě role se chápou jako zaměstnanec hotelu, kde manažer ale má vetší funkcionalitu a zaměstnanec od něj část dědí. Zaměstnanec může spravovat (mazat, editovat a vytvářet nové) jednotlivé klienty, platby, rezervace a služby.</p>
+
+<p>Uživatelská role MANAZER:<br>
+Manažer obsahuje tytéž funkce jako zaměstnanec a navíc může spravovat jednotlivé zaměstnance a to i zaměstnance s rolí manažer. Dále je schopen upravovat, přidávat a mazat pokoje v hotelu.</p>
+
+<h2>Instalace</h2>
+<ul>
+Aplikace pro svůj provoz požaduje:
+<li>Aplikační server, např. apache 2.4.X nebo vyšší verzi.</li>
+<li>Databázový server MySQL verze 5.5 a vyšší</li>
+<li>PHP verze 5 a vyšší.</li>
+<li>Jako první věc je třeba vytvořit databázi s přihlašovacím jménem "root" a heslem "root" a názvem DB "hotel". K vytvoření tabulek a naplnění daty slouží skritpt hotel_mysql.sql. </li>
+</ul>
+
+<h2>Známé problémy</h2>
+<ul>
+<li>Aplikace spoléhá na oddělený systém plateb. V případě použití této aplikace může do systému zadat platbu jen zaměstnanec.</li>
+<li>Z nedostatku času pro implementaci nejsou využity všechny tabulky databáze, konkrétně hlavně tabulky se složeným klíčem. Taktéž není využito generalizace/specializace tabulky Pobyt.</li>
+<li>Krom Authenticator.php nebylo při implementaci této aplikace modelu moc využito kvůli nedostatku skušeností. Většina operací nad databází je vykonávána v jednotlivých presenterech.</li>
+</ul>
+</body>
+</html>

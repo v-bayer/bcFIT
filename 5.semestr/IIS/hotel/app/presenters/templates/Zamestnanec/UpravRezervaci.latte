@@ -1,0 +1,20 @@
+{block content}
+    {control upravRezervaciForm}
+    <a n:href="Rezervace"><input type="button" value="Zpět"></a>
+{/block}
+{block scripts}
+
+    <script src="{$basePath}/js/datetimepicker-master/jquery.datetimepicker.js" class="script"></script>
+    <link rel="stylesheet" type="text/css" href="{$basePath}/js/datetimepicker-master/jquery.datetimepicker.css"/ >
+                                                                      
+    <script type="text/javascript">                                               
+        $(".form_datetime").datetimepicker({
+        timepicker:false,
+        lang:'cs',
+        format:'Y/m/d',
+        minDate:0,
+        });
+    </script>
+{/block}
+
+

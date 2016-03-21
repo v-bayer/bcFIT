@@ -1,0 +1,28 @@
+{block content}
+{if count($sluzby) > 0}
+    <table class="table">
+    <thead>
+    <tr>
+        <th>Typ</th>
+        <th>Cena</th>
+        {if $role == 'manazer'}<th>Zodpovedny zamestnanec ID</th>{/if}
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $sluzby as $sluzba}
+                <tr>
+                    <td>{$sluzba->typ}</td>
+                    <td>{$sluzba->cena}</td>
+                    {if $role == 'manazer'}<td>{$sluzba->cislo_zamestnance}</td>{/if}
+                    <td><a n:href="upravSluzbu $sluzba->ID_sluzby, 'uprav'"><input type="button" value="Upravit"></a>
+                    <a n:href="smazsluzbu! $sluzba->ID_sluzby"><input type="button" value="Zrušit"></a></td>
+				</tr>
+     {/foreach}
+    </tbody>
+</table>
+{else}
+    Neposkytujete žádné služby!
+{/if}
+<a n:href="upravSluzbu $sluzba->ID_sluzby, 'nova'"><input type="button" value="Nová služba"></a>
+{/block}
+

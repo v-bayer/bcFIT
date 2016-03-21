@@ -1,0 +1,25 @@
+{block content}
+{if count($platby) > 0}
+    <table class="table">
+    <thead>
+    <tr>
+        <th>Typ platby</th>
+        <th>Datum</th>
+		<th>Výše platby</th> 
+    </tr>
+    </thead>
+    <tbody>
+        {foreach $platby as $platba}
+            <tr>
+                <td>{$platba->typ_platby}</td>
+                <td>{$platba->datum|date:'%d %m %Y'}</td>
+                <td>{$platba->cena}</td>
+			</tr>
+         {/foreach}
+    </tbody>
+</table>
+{else}
+    Neprobehly zadne platby!
+{/if}
+{/block}
+

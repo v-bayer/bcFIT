@@ -1,0 +1,28 @@
+{block content}
+{if count($pobyty) > 0}
+    <table class="table">
+    <thead>
+    <tr>
+        <th>Datum od</th>
+        <th>Datum do</th>
+		<th>Cena</th> 
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $pobyty as $pobyt}
+                <tr>
+                    <td>{$pobyt->datum_od|date:'%d %m %Y'}</td>
+                    <td>{$pobyt->datum_do|date:'%d %m %Y'}</td>
+                    <td>{$pobyt->celkova_cena}</td>
+                    {if $pobyt->datum_od < $today}
+                        <td><a n:href="smazpobyt! $pobyt->ID_pobytu"><input type="button" value="Zrušit rezervaci"></a></td>
+                    {/if}
+				</tr>
+     {/foreach}
+    </tbody>
+</table>
+{else}
+    Neprobehly zadne rezervace!
+{/if}
+{/block}
+
