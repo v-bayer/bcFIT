@@ -1,0 +1,53 @@
+-- Load the data in comma-separated-values format from HDFS with the given schema
+data =
+    LOAD '/user/hue/Fielding/adminDB/eurofxref-sdmx.csv'
+    USING PigStorage(',')
+    AS (
+        currency : chararray, date : chararray, exchangeRate : double
+    );
+   
+Timestamp_data = Foreach data Generate currency, exchangeRate, ToDate(date,'yyyy-MM-dd') AS dateFormat;
+
+grouped = GROUP Timestamp_data BY currency;
+
+groupedMin = foreach grouped {
+    prods = order Timestamp_data by exchangeRate asc;
+    top_prods = limit prods 1;
+    generate flatten(top_prods);
+}
+
+dump groupedMin
+FS -rm -f -R /user/hue/Ukol-2.3./1/groupedMin.pig_output;
+STORE groupedMin INTO '/user/hue/Ukol-2.4./1/groupedMin.pig_output' USING PigStorage(',');
+
+groupedMax = foreach grouped {
+    prods = order Timestamp_data by exchangeRate desc;
+    top_prods = limit prods 1;
+    generate flatten(top_prods);
+}
+
+dump groupedMax
+FS -rm -f -R /user/hue/Ukol-2.3./2/groupedMax.pig_output;
+STORE groupedMax INTO '/user/hue/Ukol-2.4./2/groupedMax.pig_output' USING PigStorage(',');
+
+groupedMin2 = GROUP groupedMin All;
+groupedMinMin = foreach groupedMin2 {
+    prods = order groupedMin by exchangeRate asc;
+    top_prods = limit prods 1;
+    generate flatten(top_prods);
+}
+
+dump groupedMinMin
+FS -rm -f -R /user/hue/Ukol-2.3./3/groupedMinMin.pig_output;
+STORE groupedMinMin INTO '/user/hue/Ukol-2.4./3/groupedMinMin.pig_output' USING PigStorage(',');
+
+groupedMax2 = GROUP groupedMax All;
+groupedMaxMax = foreach groupedMax2 {
+    prods = order groupedMax by exchangeRate desc;
+    top_prods = limit prods 1;
+    generate flatten(top_prods);
+}
+
+dump groupedMaxMax
+FS -rm -f -R /user/hue/Ukol-2.3./4/groupedMaxMax.pig_output;
+STORE groupedMaxMax INTO '/user/hue/Ukol-2.4./4/groupedMaxMax.pig_output' USING PigStorage(',');

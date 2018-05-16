@@ -1,0 +1,17 @@
+-- Load the data in comma-separated-values format from HDFS with the given schema
+data =
+    LOAD '/user/hue/Fielding/adminDB/eurofxref-sdmx.csv'
+    USING PigStorage(',')
+    AS (
+        currency : chararray, date : chararray, exchangeRate : double
+    );
+   
+Timestamp_data = Foreach data Generate currency, exchangeRate, SUBSTRING(date, 0, 7) AS dateFormat;
+
+grouped = GROUP Timestamp_data BY (currency,dateFormat);
+--groupedAvg = foreach grouped generate AVG(Timestamp_data.exchangeRate);
+groupedAvg = foreach grouped generate Timestamp_data.currency, AVG(Timestamp_data.exchangeRate), Timestamp_data.dateFormat;
+
+dump groupedAvg
+FS -rm -f -R /user/hue/Ukol-2.3./1/groupedAvg.pig_output;
+STORE groupedAvg INTO '/user/hue/Ukol-2.3./1/groupedAvg.pig_output' USING PigStorage(',');

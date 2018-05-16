@@ -1,0 +1,40 @@
+-- Load the data in comma-separated-values format from HDFS with the given schema
+data =
+    LOAD '/user/hue/Fielding/adminDB/eurofxref-sdmx.csv'
+    USING PigStorage(',')
+    AS (
+        currency : chararray, date : chararray, exchangeRate : double
+    );
+   
+Timestamp_data = Foreach data Generate currency, exchangeRate, ToDate(date,'yyyy-MM-dd') AS dateFormat;
+
+filteredDate = FILTER Timestamp_data BY dateFormat >= ToDate('2016-11-01') AND dateFormat < ToDate('2016-12-01') AND (currency MATCHES 'CHF' OR currency MATCHES 'GBP' OR currency MATCHES 'USD');
+
+grouped = GROUP filteredDate BY currency;
+
+groupedMin = foreach grouped {
+    prods = order filteredDate by exchangeRate asc;
+    top_prods = limit prods 1;
+    generate flatten(top_prods);
+}
+
+dump groupedMin
+FS -rm -f -R /user/hue/Ukol-2.2./1/groupedMin.pig_output;
+STORE groupedMin INTO '/user/hue/Ukol-2.2./1/groupedMin.pig_output' USING PigStorage(',');
+
+groupedMax = foreach grouped {
+    prods = order filteredDate by exchangeRate desc;
+    top_prods = limit prods 1;
+    generate flatten(top_prods);
+}
+
+dump groupedMax
+FS -rm -f -R /user/hue/Ukol-2.2./2/groupedMax.pig_output;
+STORE groupedMax INTO '/user/hue/Ukol-2.2./2/groupedMax.pig_output' USING PigStorage(',');
+
+--groupedAvg = foreach grouped generate AVG(filteredDate.exchangeRate);
+groupedAvg = FOREACH grouped GENERATE filteredDate.currency, AVG(filteredDate.exchangeRate), filteredDate.dateFormat;
+
+dump groupedAvg
+FS -rm -f -R /user/hue/Ukol-2.2./3/groupedAvg.pig_output;
+STORE groupedAvg INTO '/user/hue/Ukol-2.2./3/groupedAvg.pig_output' USING PigStorage(',');
